@@ -100,7 +100,6 @@ def GetParagraphText(paragraph):
                 
     if runCount>0:
         documentText.text=convertLatLngLine(text)
-        print(text,'\n-----------',runCount)  
 
     
 
