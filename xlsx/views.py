@@ -28,6 +28,7 @@ class ConvertXlsxView(APIView):
                             sheet.cell(row=i,column=1).value=newLine
 
                         value=sheet.cell(row=i,column=2).value
+
                         if value:
                             newLine=convertLatLngLine(str(value))
                             sheet.cell(row=i,column=2).value=newLine
@@ -44,7 +45,7 @@ class ConvertXlsxView(APIView):
             pdffilename="static/"+randomName+".pdf"
             pdfpath=request.get_host()+"/"+pdffilename
             wb.save(xslxfilename)
-
+            
      
             return Response({"xlsx":xslxpath,"pdf":pdfpath})
             # return(Response(str(file)))

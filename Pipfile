@@ -14,6 +14,7 @@ pypdf2 = "*"
 aspose-words = "*"
 pdf2docx = "*"
 docx = "*"
+scikit-learn = "*"
 
 [dev-packages]
 

@@ -10,9 +10,7 @@ def convertLatLngLine(line:str):
         lng=x.group(3)
     
     # print(horraire,lat,lng)
-    
         code =reverseGeoCode(lat,lng)
         return horraire+' - '+code
     except:
-        print(line,"\n---------")
         return line

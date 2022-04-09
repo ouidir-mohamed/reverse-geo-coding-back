@@ -1,13 +1,16 @@
 
 import  requests
+from utils.nearest_city import getCommuneWilayaLine
 # local server
 def reverseGeoCode(lat:str,lng:str):
-    response =requests.get('http://197.112.4.247:4000/v1/reverse?point.lat={}&point.lon={}&size=1&layers=address,venue'.format(lat,lng))
+    response =requests.get('http://localhost:4000/v1/reverse?point.lat={}&point.lon={}&size=1&layers=street,venue,address'.format(lat,lng))
     feature=response.json()["features"][0]["properties"]
     try:
-        output=feature["name"]+", "+feature["region"]
+        output=feature["name"]+", "+getCommuneWilayaLine(lat,lng)
+        print(output)
+        
     except:
-        output=feature["label"]
+        output=feature["label"]+getCommuneWilayaLine(lat,lng)
     return(output)
 
 # mapbox 
