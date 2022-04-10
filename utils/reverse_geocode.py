@@ -7,7 +7,6 @@ def reverseGeoCode(lat:str,lng:str):
     feature=response.json()["features"][0]["properties"]
     try:
         output=feature["name"]+", "+getCommuneWilayaLine(lat,lng)
-        print(output)
         
     except:
         output=feature["label"]+getCommuneWilayaLine(lat,lng)

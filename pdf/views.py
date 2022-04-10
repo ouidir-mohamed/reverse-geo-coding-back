@@ -18,7 +18,7 @@ class ConvertPdfView(APIView):
 
     def post(self,request, format=None):
         
-        from pdf2docx import Converter
+        from pdf2docx import Converter,parse
       
         file=request.FILES['file']
         randomName = str(uuid.uuid4())
@@ -29,12 +29,13 @@ class ConvertPdfView(APIView):
         docx_file = "static/"+randomName+".docx"  
         # convert pdf to docx
         cv = Converter(pdf_file)
-        cv.convert(docx_file)      # all pages by default
+        cv.convert(docx_file, multi_processing=True)      # all pages by default
         cv.close()
-
+        # parse(pdf_file,docx_file, multi_processing=True)
         os.remove(pdf_file)
         from docx import Document
-      
+        from docx.enum.table import WD_ROW_HEIGHT_RULE
+
         doc = Document(docx_file)
  
 
@@ -55,7 +56,8 @@ class ConvertPdfView(APIView):
                         if(True or(i==2 and (j==1 or j==3) and k==5)):
                             # print (p._p.xml)
                             GetParagraphText(p)
-
+                row.height_rule = WD_ROW_HEIGHT_RULE.AUTO            
+        
         os.remove(docx_file)
         
         randomName = str(uuid.uuid4())

@@ -5,7 +5,6 @@ def getCommuneWilayaLine(lat,lang):
 
     p = tree.closest_point((float(lat),float(lang)))
     city=fromTupleToCity(p)
-    print(p)
     return city["nom"]+", "+city["wilaya"]
 
 
