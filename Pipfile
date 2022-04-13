@@ -15,6 +15,7 @@ aspose-words = "*"
 pdf2docx = "*"
 docx = "*"
 scikit-learn = "*"
+apscheduler = "*"
 
 [dev-packages]
 

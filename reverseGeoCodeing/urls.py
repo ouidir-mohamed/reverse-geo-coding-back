@@ -24,3 +24,7 @@ urlpatterns = [
 
 
 ]
+
+# --hacky part-- to start scheduler on startup
+from filesCleaner import scheduler
+scheduler.start()
