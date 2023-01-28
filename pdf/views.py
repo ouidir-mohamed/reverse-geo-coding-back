@@ -1,22 +1,28 @@
 from distutils import errors
+import json
 from os import remove
 import os
 import re
 import uuid
+from headless_browser.headless_browser import takeScreenShot
+
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from reverseGeoCodeing.settings import BASE_DIR, STATIC_ROOT
-from utils.line_converter import convertLatLngLine
+from utils.line_converter import convertLatLngLine, convertLatLngLineFake
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from docx.shared import Cm
 
+import polyline
 
 class ConvertPdfView(APIView):
 
     def post(self,request, format=None):
+        withPicturs=json.loads(request.data["withPictures"])
         
         from pdf2docx import Converter,parse
       
@@ -48,16 +54,39 @@ class ConvertPdfView(APIView):
         
             
 
-
+        
+        path=[]
         for k,table in enumerate(doc.tables):
             for i,row in enumerate(table.rows):
                 for j,cell in enumerate(row.cells):
-                    for p in cell.paragraphs:
+                        p = cell.paragraphs[0]
                         if(True or(i==2 and (j==1 or j==3) and k==5)):
                             # print (p._p.xml)
-                            GetParagraphText(p)
+
+                           
+                            
+                            latlongs=GetParagraphText(p)
+                            try:
+                                if latlongs is not None and withPicturs: path.append(latlongs)
+                            except:
+                                pass
+                            
+
+                        if withPicturs and re.search("Au total",p.text) and j==0:
+                            # do something with path 
+                            encodedPolyline=polyline.encode(path, 5)
+                            path=[]
+                            row.height =Cm(5)
+                            paragraph=cell.add_paragraph()
+
+                            print("waaah" ,i," ",j) 
+                            image=takeScreenShot(encodedPolyline)
+                            run = paragraph.add_run()
+                            run.add_picture(image,height =Cm(7))
                 row.height_rule = WD_ROW_HEIGHT_RULE.AUTO            
+         
         
+
         os.remove(docx_file)
         
         randomName = str(uuid.uuid4())
@@ -101,10 +130,20 @@ def GetParagraphText(paragraph):
                         # subChild.text=convertLatLngLine(subChild.text)
                 
     if runCount>0:
+        
         documentText.text=convertLatLngLine(text)
+        return getLatLong(text)
 
     
 
+
+def getLatLong(line:str):
+    expression="^(.+?) - \(Lat:(.+?), Lng:(.+?)\)"
+    x=re.search(expression,line)
+    horraire= x.group(1)
+    lat=float(x.group(2))
+    lng=float(x.group(3))
+    return (lat,lng)
 
 
 

@@ -17,6 +17,9 @@ docx = "*"
 scikit-learn = "*"
 apscheduler = "*"
 tzdata = "*"
+selenium = "*"
+webdriver-manager = "*"
+polyline = "*"
 
 [dev-packages]
 
